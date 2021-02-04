@@ -1,19 +1,32 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="UTF-8">
+	    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href={{ url_for('static', filename='styles.css') }} />
     </head>
     <body>
-        <h2>Naitam's favorite shows are:</h2>
-        <ol>
-            {% for i in range(0, len) %}
-                {% if tv_shows[i] == "Community" %}
-                    <li id="fav">{{ tv_shows[i] }}</li><img src="{{ shows_img[i] }}">
-                {% else %}
-                    <li>{{ tv_shows[i] }}</li><img src="{{ shows_img[i] }}">
-                {% endif %}
-            {% endfor %}
-        </ol>
-        <img src="http://assets.stickpng.com/thumbs/5ece4ff9123d6d0004ce5f89.png"></img>
+        
+	<div class="animation-area">
+		<div class="profile">
+			<img src="{{ song_img[rand_index] }}"/>
+			<h2>{{ songs[rand_index] }}</h2>
+			<h2>{{ artist[rand_index] }}</h2>
+			<audio controls autoplay loop>
+				<source src="{{ preview_url[rand_index] }}" type="audio/mpeg">
+			</audio>
+		</div>
+		
+		<!--<img class="logo" src="https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Logo_RGB_Black.png"></img>-->
+		<ul class="box-area">
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+	</div>
+        
     </body>
 </html>

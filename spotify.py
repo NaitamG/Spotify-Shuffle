@@ -1,6 +1,7 @@
 import requests
 import os
 import base64
+import random
 #import datetime
 from urllib.parse import urlencode
 from dotenv import load_dotenv, find_dotenv
@@ -85,11 +86,11 @@ for i in range(0, len(artist_data)):
     song_img.append(artist_data[i]['tracks'][indicies['song_indicies'][i]]['album']['images'][1]['url'])
     preview_url.append(artist_data[i]['tracks'][indicies['song_indicies'][i]]['preview_url'])
     
-"""for i in range(0, len(artist_data)):
-    print(artist[i])
-    print(songs[i])
-    print(song_img[i])
-    print(preview_url[i])"""
+for i in range(0, len(artist_data)):
+    #print(artist[i])
+    #print(songs[i])
+    #print(song_img[i])
+    print(preview_url[i])
     
 # introducing Flask framework to pass the data in list format 
     
@@ -102,6 +103,7 @@ def spotify():
     return render_template(
         "index.html",
         len = len(artist_data),
+        rand_index = random.randint(0, len(artist_data)), # this is to randomize the profile on the web page every refresh
         artist = artist,
         songs = songs,
         song_img = song_img,
