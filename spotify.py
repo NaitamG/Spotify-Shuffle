@@ -1,9 +1,19 @@
 import requests
 import os
 import base64
-import datetime
+#import datetime
 from urllib.parse import urlencode
 from dotenv import load_dotenv, find_dotenv
+from flask import Flask, render_template
+
+# different lists that will be used to store data
+artist=[]
+songs=[]
+artists_img=[]
+song_img=[]
+preview_url=[]
+artist_data=[]
+
 
 load_dotenv(find_dotenv()) # This is to load your API keys from .env
 
@@ -36,28 +46,70 @@ if response.status_code in range(200, 299): # to check if the response is valid 
     
     response_data = response.json() # returns a map of different auth data
     
-    now = datetime.datetime.now()
+    #now = datetime.datetime.now()
     access_token = response_data['access_token'] # grab the access_token
-    expires_in = response_data['expires_in'] # grab the expire_in value, time in seconds
+    #expires_in = response_data['expires_in'] # grab the expire_in value, time in seconds
     
-    expires = now + datetime.timedelta(seconds=expires_in)
-    did_it_expire = expires < now # keep a bool value to check if session is expired or not
+    #expires = now + datetime.timedelta(seconds=expires_in)
+    #did_it_expire = expires < now # keep a bool value to check if session is expired or not
     #print(response_data)
     
-    
-    
-    
-# this is the browser API requests, using the access key and url to search the new release data
+
+# this will get the song name, artists, images, url... using the tracks API
 headers = {
     "Authorization" : f"Bearer {access_token}" # use the access token from above
 }
 
-endpoint = "https://api.spotify.com/v1/browse/new-releases" # endpoint to use for browser api
-data = urlencode({"country": "US", "limit": "25"})
-lookup_url = f"{endpoint}?{data}" # final url that'll be used
+# the artist's id
+artist_id = ['0Y5tJX1MQlPlqiwlOH1tJY', '50co4Is1HCEo8bhOyUWKpn', '3MZsBdqDrRTJihTHQrO6Dq', '4O15NlyKLIASxsJ0PrXPfz', '3TVXtAsR1Inumwj472S9r4', '1anyVhU62p31KFi8MEzkbf', '7tYKF4w9nC0nq9CsPZTHyP', '2h93pZq0e7k5yf4dywlkpM'] 
+# travis, young thug, joji, lil uzi, drake, chance, sza, frank ocean
 
-browser_response = requests.get(lookup_url, headers=headers) # make the request
-browser_data = browser_response.json()
+for i in artist_id:
+    
+    endpoint = f"https://api.spotify.com/v1/artists/{i}/top-tracks" # endpoint to use for artists' top-tracks api
+    market = urlencode({"market": "US"})
+    lookup_url = f"{endpoint}?{market}"
+    artist_response = requests.get(lookup_url, headers=headers) # make the request
+    
+    artist_data.append(artist_response.json()) # append each artist's data into the list 
 
-for i in range(0, 25):
-    print(browser_data['albums']['items'][i]['name'])
+# since there's lack of consistency in the data, these are the specific indicies used to get that song/name
+indicies = {
+    "artist_indicies": [0,-1,0,0,0,0,0,0],
+    "song_indicies": [4,4,0,9,3,4,3,0]
+}
+
+for i in range(0, len(artist_data)):
+    artist.append(artist_data[i]['tracks'][0]['artists'][indicies['artist_indicies'][i]]['name'])
+    songs.append(artist_data[i]['tracks'][indicies['song_indicies'][i]]['name'])
+    song_img.append(artist_data[i]['tracks'][indicies['song_indicies'][i]]['album']['images'][1]['url'])
+    preview_url.append(artist_data[i]['tracks'][indicies['song_indicies'][i]]['preview_url'])
+    
+"""for i in range(0, len(artist_data)):
+    print(artist[i])
+    print(songs[i])
+    print(song_img[i])
+    print(preview_url[i])"""
+    
+# introducing Flask framework to pass the data in list format 
+    
+app = Flask(__name__)
+
+@app.route('/')
+    
+def spotify():
+    
+    return render_template(
+        "index.html",
+        len = len(artist_data),
+        artist = artist,
+        songs = songs,
+        song_img = song_img,
+        preview_url = preview_url
+    )
+    
+app.run(
+    port=int(os.getenv('PORT', 8080)),
+    host=os.getenv('IP', '0.0.0.0'),
+    debug=True
+)

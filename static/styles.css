@@ -2,3 +2,8 @@ body {
     background-color: #880e4f;
     font-family: Arial;
 }
+
+img{
+    height: 100px;
+    width: 230px;
+}
