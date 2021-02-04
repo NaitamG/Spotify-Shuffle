@@ -6,27 +6,24 @@
         <link rel="stylesheet" href={{ url_for('static', filename='styles.css') }} />
     </head>
     <body>
-	<div class="animation-area">
-		<ul class="box-area">
-			<li></li>
-			<li></li>
-			<li></li>
-			<li></li>
-			<li></li>
-			<li></li>
-		</ul>
-		<div class="grid-container">
-		<img class="logo" src="https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Logo_RGB_Black.png"></img>
+		<div class="animation-area">
+			<img class="logo" src="https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Logo_RGB_Black.png"></img>
+			<ul class="box-area">
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
 			<div class="grid-item">
-			  	<img src="{{ song_img[rand_index] }}"/>
+				<img id="song" src="{{ song_img[rand_index] }}"/>
 				<h2>{{ songs[rand_index] }}</h2>
 				<h2>{{ artist[rand_index] }}</h2>
 				<audio controls autoplay loop>
 					<source src="{{ preview_url[rand_index] }}" type="audio/mpeg">
 				</audio>
-		  	</div>
+			</div>
 		</div>
-	</div>
-        
     </body>
 </html>
