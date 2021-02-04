@@ -103,7 +103,7 @@ def spotify():
     return render_template(
         "index.html",
         len = len(artist_data),
-        rand_index = random.randint(0, len(artist_data)), # this is to randomize the profile on the web page every refresh
+        rand_index = random.randint(0, len(artist_data)-1), # this is to randomize the profile on the web page every refresh
         artist = artist,
         songs = songs,
         song_img = song_img,
