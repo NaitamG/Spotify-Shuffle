@@ -2,7 +2,6 @@ import requests
 import os
 import base64
 import random
-#import datetime
 from urllib.parse import urlencode
 from dotenv import load_dotenv, find_dotenv
 from flask import Flask, render_template
@@ -46,14 +45,7 @@ response = requests.post(token_url, data=token_data, headers=token_header)
 if response.status_code in range(200, 299): # to check if the response is valid or not
     
     response_data = response.json() # returns a map of different auth data
-    
-    #now = datetime.datetime.now()
     access_token = response_data['access_token'] # grab the access_token
-    #expires_in = response_data['expires_in'] # grab the expire_in value, time in seconds
-    
-    #expires = now + datetime.timedelta(seconds=expires_in)
-    #did_it_expire = expires < now # keep a bool value to check if session is expired or not
-    #print(response_data)
     
 
 # this will get the song name, artists, images, url... using the tracks API
@@ -85,12 +77,13 @@ for i in range(0, len(artist_data)):
     songs.append(artist_data[i]['tracks'][indicies['song_indicies'][i]]['name'])
     song_img.append(artist_data[i]['tracks'][indicies['song_indicies'][i]]['album']['images'][1]['url'])
     preview_url.append(artist_data[i]['tracks'][indicies['song_indicies'][i]]['preview_url'])
-    
-for i in range(0, len(artist_data)):
+
+# to debug list   
+#or i in range(0, len(artist_data)):
     #print(artist[i])
     #print(songs[i])
     #print(song_img[i])
-    print(preview_url[i])
+    #print(preview_url[i])
     
 # introducing Flask framework to pass the data in list format 
     
