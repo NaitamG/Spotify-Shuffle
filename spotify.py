@@ -13,16 +13,20 @@ artists_img=[]
 song_img=[]
 preview_url=[]
 artist_data=[]
+lyrics_data=[]
+song_lyrics_urls=[]
 
 
 load_dotenv(find_dotenv()) # This is to load your API keys from .env
 
 token_url = "https://accounts.spotify.com/api/token" # url to get authorization and make a token for a session
+genius_url = "https://api.genius.com/"
 method = "POST"
 
 # set the credentials from .env file
-client_id = os.getenv('client_id')
-client_secret = os.getenv('client_secret')
+client_id = os.getenv('client_id_spotify')
+client_secret = os.getenv('client_secret_spotify')
+client_access_token = os.getenv('client_access_token') # <- for genius
 
 # make an f string with the credentials, which will be encoded with base64 later
 client_creds = f"{client_id}:{client_secret}"
@@ -47,10 +51,14 @@ if response.status_code in range(200, 299): # to check if the response is valid 
     response_data = response.json() # returns a map of different auth data
     access_token = response_data['access_token'] # grab the access_token
     
-
 # this will get the song name, artists, images, url... using the tracks API
 headers = {
     "Authorization" : f"Bearer {access_token}" # use the access token from above
+}
+
+# do genius authorization
+headers_genius = {
+    "Authorization" : f"Bearer {client_access_token}"
 }
 
 # the artist's id
@@ -58,12 +66,10 @@ artist_id = ['0Y5tJX1MQlPlqiwlOH1tJY', '50co4Is1HCEo8bhOyUWKpn', '3MZsBdqDrRTJih
 # travis, young thug, joji, lil uzi, drake, chance, sza, frank ocean
 
 for i in artist_id:
-    
     endpoint = f"https://api.spotify.com/v1/artists/{i}/top-tracks" # endpoint to use for artists' top-tracks api
     market = urlencode({"market": "US"})
     lookup_url = f"{endpoint}?{market}"
     artist_response = requests.get(lookup_url, headers=headers) # make the request
-    
     artist_data.append(artist_response.json()) # append each artist's data into the list 
 
 # since there's lack of consistency in the data, these are the specific indicies used to get that song/name
@@ -79,9 +85,14 @@ for i in range(0, len(artist_data)):
     preview_url.append(artist_data[i]['tracks'][indicies['song_indicies'][i]]['preview_url'])
 
 
+# to search genius lyrics of the songs
 for song in songs:
+    song = song.replace(" ", "%20") # <- replace spaces for url
+    genius_search = f"{genius_url}search?q={song}"
+    genius_response = requests.get(genius_search, headers=headers_genius)
+    lyrics_data.append(genius_response.json())
     
-
+    
 # to debug list   
 #or i in range(0, len(artist_data)):
     #print(artist[i])
@@ -91,7 +102,7 @@ for song in songs:
     
 # introducing Flask framework to pass the data in list format 
     
-@app = Flask(__name__)
+app = Flask(__name__)
 
 @app.route('/')
     
