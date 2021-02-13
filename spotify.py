@@ -62,8 +62,8 @@ headers_genius = {
 }
 
 # the artist's id
-artist_id = ['0Y5tJX1MQlPlqiwlOH1tJY', '50co4Is1HCEo8bhOyUWKpn', '3MZsBdqDrRTJihTHQrO6Dq', '4O15NlyKLIASxsJ0PrXPfz', '3TVXtAsR1Inumwj472S9r4', '1anyVhU62p31KFi8MEzkbf', '7tYKF4w9nC0nq9CsPZTHyP', '2h93pZq0e7k5yf4dywlkpM'] 
-# travis, young thug, joji, lil uzi, drake, chance, sza, frank ocean
+artist_id = ['0Y5tJX1MQlPlqiwlOH1tJY', '3MZsBdqDrRTJihTHQrO6Dq', '4O15NlyKLIASxsJ0PrXPfz', '1anyVhU62p31KFi8MEzkbf', '7tYKF4w9nC0nq9CsPZTHyP', '2h93pZq0e7k5yf4dywlkpM'] 
+# travis, joji, lil uzi, drake, chance, sza, frank ocean
 
 for i in artist_id:
     endpoint = f"https://api.spotify.com/v1/artists/{i}/top-tracks" # endpoint to use for artists' top-tracks api
@@ -74,8 +74,9 @@ for i in artist_id:
 
 # since there's lack of consistency in the data, these are the specific indicies used to get that song/name
 indicies = {
-    "artist_indicies": [0,-1,0,0,0,0,0,0],
-    "song_indicies": [4,4,0,9,3,4,3,0]
+    "artist_indicies": [0,0,0,0,0,0],
+    "song_indicies": [4,0,9,4,3,0]
+    #"lyrics_indicies": [0,0,0,0,,-1,0]
 }
 
 for i in range(0, len(artist_data)):
@@ -91,10 +92,19 @@ for song in songs:
     genius_search = f"{genius_url}search?q={song}"
     genius_response = requests.get(genius_search, headers=headers_genius)
     lyrics_data.append(genius_response.json())
-    
-    
+
+# get the url links
+for i in range(0,len(lyrics_data)):
+    for j in range(0, len(lyrics_data[i]['response']['hits'])):
+        if (lyrics_data[i]['response']['hits'][j]['result']['title'] in songs[i]):
+            song_lyrics_urls.append(lyrics_data[i]['response']['hits'][j]['result']['url'])
+            break
+
+for i in range(0,len(song_lyrics_urls)):
+    print(song_lyrics_urls[i])
+    print(songs[i])
 # to debug list   
-#or i in range(0, len(artist_data)):
+#or i in range(0, len(artist_data)):clear
     #print(artist[i])
     #print(songs[i])
     #print(song_img[i])
@@ -115,7 +125,8 @@ def spotify():
         artist = artist,
         songs = songs,
         song_img = song_img,
-        preview_url = preview_url
+        preview_url = preview_url,
+        song_lyrics_urls=song_lyrics_urls
     )
     
 app.run(

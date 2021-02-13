@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-	    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700&display=swap" rel="stylesheet">
+	    <link rel="https://cdn.rawgit.com/mfd/f3d96ec7f0e8f034cc22ea73b3797b59/raw/856f1dbb8d807aabceb80b6d4f94b464df461b3e/gotham.css">
         <link rel="stylesheet" href={{ url_for('static', filename='styles.css') }} />
     </head>
     <body>
@@ -16,9 +16,11 @@
 				<li></li>
 			</ul>
 			<div class="grid-item">
-				<img id="song" src="{{ song_img[rand_index] }}"/>
-				<h2>{{ songs[rand_index] }}</h2>
-				<h2>{{ artist[rand_index] }}</h2>
+				<a href="{{ song_lyrics_urls[rand_index] }}" title="Checkout song lyrics">
+					<img id="song" src="{{ song_img[rand_index] }}"/>
+				</a>
+				<h2 id="title">{{ songs[rand_index] }}</h2>
+				<h2 id="artist">{{ artist[rand_index] }}</h2>
 				<audio controls autoplay loop>
 					<source src="{{ preview_url[rand_index] }}" type="audio/mpeg">
 				</audio>
