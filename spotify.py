@@ -78,6 +78,10 @@ for i in range(0, len(artist_data)):
     song_img.append(artist_data[i]['tracks'][indicies['song_indicies'][i]]['album']['images'][1]['url'])
     preview_url.append(artist_data[i]['tracks'][indicies['song_indicies'][i]]['preview_url'])
 
+
+for song in songs:
+    
+
 # to debug list   
 #or i in range(0, len(artist_data)):
     #print(artist[i])
@@ -87,7 +91,7 @@ for i in range(0, len(artist_data)):
     
 # introducing Flask framework to pass the data in list format 
     
-app = Flask(__name__)
+@app = Flask(__name__)
 
 @app.route('/')
     
