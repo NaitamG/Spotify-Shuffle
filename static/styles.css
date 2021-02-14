@@ -91,12 +91,27 @@ body {
 #song{
 	border-radius: 50%;
 }
+#artist-photo{
+	display: block;
+	max-width:215px;
+	max-height:80px;
+	width: auto;
+	height: auto;
+	border-radius: 10%;
+  	margin-left: auto;
+  	margin-right: auto;
+  	padding: 5px;
+}
 #title{
 	font-size: 25px;
 }
 #artist{
 	font-size: 20px;
 	
+}
+.artist{
+  	z-index: 3;
+  	position: relative;
 }
 img:hover {
     webkit-filter: blur(0.8px); /* Chrome, Safari, Opera */

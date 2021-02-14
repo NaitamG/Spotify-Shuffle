@@ -16,13 +16,20 @@
 				<li></li>
 			</ul>
 			<div class="grid-item">
-				<a href="{{ song_lyrics_urls[rand_index] }}" title="Checkout song lyrics">
-					<img id="song" src="{{ song_img[rand_index] }}"/>
+				<a href="{{ song_lyrics }}" title="Checkout song lyrics">
+					<img id="song" src="{{ song_img }}"/>
 				</a>
-				<h2 id="title">{{ songs[rand_index] }}</h2>
-				<h2 id="artist">{{ artist[rand_index] }}</h2>
+				<h2 id="title">{{ song }}</h2>
+				<h2 id="artist">{{ artist }}</h2>
+				{% if song_img != "" %}
+				<a href="{{ song_lyrics }}" title="Checkout song lyrics">
+					<div class="artist">
+						<img id="artist-photo" src="{{ artist_img }}"/>
+					</div>
+				</a>
+				{% endif %}
 				<audio controls autoplay loop>
-					<source src="{{ preview_url[rand_index] }}" type="audio/mpeg">
+					<source src="{{ preview_url }}" type="audio/mpeg">
 				</audio>
 			</div>
 		</div>

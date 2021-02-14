@@ -6,17 +6,6 @@ from urllib.parse import urlencode
 from dotenv import load_dotenv, find_dotenv
 from flask import Flask, render_template
 
-# different lists that will be used to store data
-artist=[]
-songs=[]
-artists_img=[]
-song_img=[]
-preview_url=[]
-artist_data=[]
-lyrics_data=[]
-song_lyrics_urls=[]
-
-
 load_dotenv(find_dotenv()) # This is to load your API keys from .env
 
 token_url = "https://accounts.spotify.com/api/token" # url to get authorization and make a token for a session
@@ -34,99 +23,84 @@ client_creds = f"{client_id}:{client_secret}"
 # this encodes the creds into bytes and then one more time into base64 for it to be passed in header
 client_creds_b64 = base64.b64encode(client_creds.encode())
 
-
 token_data = {
     "grant_type": "client_credentials",
 }
-
+    
 token_header = {
     "Authorization": f"Basic {client_creds_b64.decode()}" # client credentials utilized for authorization, creds are decoded to make it into a base64 encoded string not bytes 
 }
-
+    
 response = requests.post(token_url, data=token_data, headers=token_header)
-
+    
 # handling the initial authentication requests
 if response.status_code in range(200, 299): # to check if the response is valid or not
-    
     response_data = response.json() # returns a map of different auth data
     access_token = response_data['access_token'] # grab the access_token
-    
+        
 # this will get the song name, artists, images, url... using the tracks API
 headers = {
     "Authorization" : f"Bearer {access_token}" # use the access token from above
 }
-
+    
 # do genius authorization
 headers_genius = {
     "Authorization" : f"Bearer {client_access_token}"
 }
 
-# the artist's id
-artist_id = ['0Y5tJX1MQlPlqiwlOH1tJY', '3MZsBdqDrRTJihTHQrO6Dq', '4O15NlyKLIASxsJ0PrXPfz', '1anyVhU62p31KFi8MEzkbf', '7tYKF4w9nC0nq9CsPZTHyP', '2h93pZq0e7k5yf4dywlkpM'] 
-# travis, joji, lil uzi, drake, chance, sza, frank ocean
-
-for i in artist_id:
-    endpoint = f"https://api.spotify.com/v1/artists/{i}/top-tracks" # endpoint to use for artists' top-tracks api
-    market = urlencode({"market": "US"})
-    lookup_url = f"{endpoint}?{market}"
-    artist_response = requests.get(lookup_url, headers=headers) # make the request
-    artist_data.append(artist_response.json()) # append each artist's data into the list 
-
-# since there's lack of consistency in the data, these are the specific indicies used to get that song/name
-indicies = {
-    "artist_indicies": [0,0,0,0,0,0],
-    "song_indicies": [4,0,9,4,3,0]
-    #"lyrics_indicies": [0,0,0,0,,-1,0]
-}
-
-for i in range(0, len(artist_data)):
-    artist.append(artist_data[i]['tracks'][0]['artists'][indicies['artist_indicies'][i]]['name'])
-    songs.append(artist_data[i]['tracks'][indicies['song_indicies'][i]]['name'])
-    song_img.append(artist_data[i]['tracks'][indicies['song_indicies'][i]]['album']['images'][1]['url'])
-    preview_url.append(artist_data[i]['tracks'][indicies['song_indicies'][i]]['preview_url'])
-
-
-# to search genius lyrics of the songs
-for song in songs:
-    song = song.replace(" ", "%20") # <- replace spaces for url
-    genius_search = f"{genius_url}search?q={song}"
-    genius_response = requests.get(genius_search, headers=headers_genius)
-    lyrics_data.append(genius_response.json())
-
-# get the url links
-for i in range(0,len(lyrics_data)):
-    for j in range(0, len(lyrics_data[i]['response']['hits'])):
-        if (lyrics_data[i]['response']['hits'][j]['result']['title'] in songs[i]):
-            song_lyrics_urls.append(lyrics_data[i]['response']['hits'][j]['result']['url'])
-            break
-
-for i in range(0,len(song_lyrics_urls)):
-    print(song_lyrics_urls[i])
-    print(songs[i])
-# to debug list   
-#or i in range(0, len(artist_data)):clear
-    #print(artist[i])
-    #print(songs[i])
-    #print(song_img[i])
-    #print(preview_url[i])
-    
 # introducing Flask framework to pass the data in list format 
-    
 app = Flask(__name__)
 
 @app.route('/')
-    
 def spotify():
+    #print("HELLOO")
+    # the artist's id
+    artist_id = ['0Y5tJX1MQlPlqiwlOH1tJY', '3MZsBdqDrRTJihTHQrO6Dq', '4O15NlyKLIASxsJ0PrXPfz', '1anyVhU62p31KFi8MEzkbf', '7tYKF4w9nC0nq9CsPZTHyP', '2h93pZq0e7k5yf4dywlkpM','1Xyo4u8uXC1ZmMpatF05PJ','20wkVLutqVOYrc0kxFs7rA'] 
+    # travis, joji, lil uzi, chance, sza, frank ocean, weekend, daniel
+        
+    artist_index = random.randint(0, len(artist_id)-1) # determines the artist from the list above
+    track_index = random.randint(0, 9) # determines the track from the top-tracks(10 tracks)
     
+    #print(artist_index)
+    #print(track_index)
+        
+    endpoint = f"https://api.spotify.com/v1/artists/{artist_id[artist_index]}/top-tracks" # endpoint to use for artists' top-tracks api
+    #print(endpoint)
+    market = urlencode({"market": "US"})        
+    lookup_url = f"{endpoint}?{market}"
+    artist_response = requests.get(lookup_url, headers=headers) # make the request
+    artist_data = (artist_response.json()) # append each artist's data into the list 
+        
+    #print(artist_data)
+    # this sets the name of artist, artist's song, song cover, and song preview 
+    artist = artist_data['tracks'][track_index]['artists'][0]['name']
+    song = artist_data['tracks'][track_index]['name']
+    song_img = artist_data['tracks'][track_index]['album']['images'][1]['url']
+    preview_url = artist_data['tracks'][track_index]['preview_url']
+        
+    #print("artist: " + artist)
+    #print("song: " + song)
+    #print("song_img: " + song_img)
+    #print("preview_url: " + str(preview_url))
+    # to search genius lyrics of the songs
+    song_genius_url = song.replace(" ", "%20") # <- replace the spaces for url use in genius api request
+    genius_search = f"{genius_url}search?q={song_genius_url}"
+    genius_response = requests.get(genius_search, headers=headers_genius)
+    lyrics_data = (genius_response.json())
+    #print(lyrics_data)
+        
+    # get the lyrics link of the song
+    song_lyrics = lyrics_data['response']['hits'][0]['result']['url']
+    artist_img = lyrics_data['response']['hits'][0]['result']['primary_artist']['image_url']
+
     return render_template(
         "index.html",
-        len = len(artist_data),
-        rand_index = random.randint(0, len(artist_data)-1), # this is to randomize the profile on the web page every refresh
         artist = artist,
-        songs = songs,
+        song = song,
         song_img = song_img,
         preview_url = preview_url,
-        song_lyrics_urls=song_lyrics_urls
+        song_lyrics=song_lyrics,
+        artist_img=artist_img
     )
     
 app.run(
