@@ -17,6 +17,7 @@ For this project I used the AWS Cloud9 IDE to set up and edit all of my code. Th
 ### Known problem
 + The app is only designed to fetch data of a handful of artists that I like, and to fix this I can just get user input and use the search api on spoitfy to get any song instead of just getting it for pre-determined artists.
 + The data being fetched in only from the top-tracks list, so it's limited to only few options.
++ When the song is searched in the Genius API, it doesn't always gaurantee the correct verion or song because I take in the url of the first result. The song title I have uss from the spotify api can tend to have a different from the genius title which can result in an incorrect search.
 
 ### What would you do to improve your project in the future? 
 + I would like to have a home page which would feature "Naitam's Picks" which would then lead you to the page you currently see.
