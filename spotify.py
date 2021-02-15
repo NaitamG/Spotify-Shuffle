@@ -92,7 +92,7 @@ def spotify():
     # get the lyrics link of the song
     song_lyrics = lyrics_data['response']['hits'][0]['result']['url']
     artist_img = lyrics_data['response']['hits'][0]['result']['primary_artist']['image_url']
-
+    
     return render_template(
         "index.html",
         artist = artist,
