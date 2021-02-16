@@ -6,7 +6,7 @@ certifi==2020.12.5
 chardet==4.0.0
 click==7.1.2
 colorama==0.4.3
-Dash = 1.9.0
+Dash==1.9.0
 dash-bootstrap-components==0.8.3
 decorator==4.4.2
 Django==2.0.2
