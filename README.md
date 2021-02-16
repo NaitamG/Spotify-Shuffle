@@ -15,10 +15,11 @@ For this project I used the AWS Cloud9 IDE to set up and edit all of my code. Th
 + I had a major bottleneck because I began the project using lists to store the json formated data. so when it came to using the Genius API the data that I wanted to use was just not cooperative and I had a lot of formating issues. After many troubleshooting attempts later, I decided to use the flask fucntion to dynamically fetch the data ever reload for a single artist instead of getting all the data for all artists in at once. This way the data is stored in variables and not lists, and it's much faster and easier to use and pass on to the html file.
 
 ### Known problem
-+ The app is only designed to fetch data of a handful of artists that I like, and to fix this I can just get user input and use the search api on spoitfy to get any song instead of just getting it for pre-determined artists.
-+ The data being fetched in only from the top-tracks list, so it's limited to only few options.
 + When the song is searched in the Genius API, it doesn't always gaurantee the correct verion or song because I take in the url of the first result. The song title I have uss from the spotify api can tend to have a different from the genius title which can result in an incorrect search.
++ On the home page the preview url player is always showing, so it takes away from the asthetics of the webpage
++ Same problem with the header "Naitam's Spotify Project" on the home page. I tried adding JS fucntion using it on the button with onclick but it didn't seem to clear out even with that attempt.
 
 ### What would you do to improve your project in the future? 
-+ I would like to have a home page which would feature "Naitam's Picks" which would then lead you to the page you currently see.
-+ I want to add the ability get user input to search any songs on that home page so you can get a small profile of any song and its artist.
++ I would like to have a more information about the artist.
++ I'd like to fix the header and the preview url player issues to make the app seem cleaner
++ I'd also like to add maybe music video's so that there's a visual for the user.
