@@ -4,7 +4,7 @@ import base64
 import random
 from urllib.parse import urlencode
 from dotenv import load_dotenv, find_dotenv
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 load_dotenv(find_dotenv()) # This is to load your API keys from .env
 
@@ -52,6 +52,51 @@ headers_genius = {
 app = Flask(__name__)
 
 @app.route('/')
+def home():
+    # creating a home page where the user will be greated and be allowed to search any songs
+    return render_template(
+        "home.html"
+    )
+    
+@app.route('/send', methods=['POST', 'GET'])  # <- to get user search input
+def send():
+    track=""
+    if request.method == 'POST':
+        track = request.form["search"]
+    track = track.replace(" ", "%20")
+    track_search_url = f"https://api.spotify.com/v1/search?q={track}&type=track%2Cartist&market=US"
+    track_response = requests.get(track_search_url, headers=headers)
+    track_data = track_response.json()
+    
+    # search version of the info for sportify api
+    artist_s = track_data['tracks']['items'][0]['artists'][0]['name']
+    song_s = track_data['tracks']['items'][0]['name']
+    song_img_s = track_data['tracks']['items'][0]['album']['images'][1]['url']
+    preview_url_s = track_data['tracks']['items'][0]['preview_url']
+    
+    # genius lyrics lookup
+    genius_search_url = f"{genius_url}search?q={track}"
+    genius_response = requests.get(genius_search_url, headers=headers_genius)
+    lyrics_data = (genius_response.json())
+    
+    song_lyrics_s = lyrics_data['response']['hits'][0]['result']['url']
+    artist_img_s = lyrics_data['response']['hits'][0]['result']['primary_artist']['image_url']
+    
+    return render_template(
+        "home.html",
+        artist = artist_s,
+        song = song_s,
+        song_img = song_img_s,
+        preview_url = preview_url_s,
+        song_lyrics=song_lyrics_s,
+        artist_img=artist_img_s
+    )
+    
+    
+    
+    
+    
+@app.route('/spotify')
 def spotify():
     #print("HELLOO")
     # the artist's id
